@@ -1,0 +1,149 @@
+/* FONTS */
+@import url(//fonts.googleapis.com/css?family=Pacifico&text=Lilamrt);
+@import url(//fonts.googleapis.com/css?family=Kaushan+Script&text=OnlineShop);
+:root {
+	--black:hsl(0, 0%, 15%);
+	--white:hsl(0, 0%, 100%);
+	--gold:hsl(43, 98%, 51%);
+	--green:hsl(151, 38%, 54%);
+	--coral:hsl(8, 91%, 67%);
+	--pink:hsl(330, 46%, 55%);
+}
+@keyframes logo-shade {
+	0% {background-position: 0 0}
+	0% {background-position: 100% -100%}
+	}
+@keyframes logo-text {
+	from {background-position: 0% center}
+  to {background-position: -1000% center}
+}
+@keyframes scale {
+  from, to {transform: scale(0)}
+  50% {transform: scale(1.3)}
+}
+
+@keyframes rotate {
+  from {transform: rotate(0deg)}
+  to {transform: rotate(180deg)}
+}
+body {
+	background-color: var(--gold);
+	text-align: center;
+}
+#logo {
+	user-select: none;
+	overflow: visible;
+	display: inline-block;
+	position: absolute;
+	border: 1px solid black;
+	top: 50%;
+	}
+	#logo:before {
+		content: '';
+		vertical-align: middle;
+		}
+	#logo > h1, #logo > h1:before, #logo > h1:after {
+		position: absolute;
+		margin: 0;
+		padding: 0;
+		top:-100px; left:-195px;
+		display: block;
+		}
+	#logo[splash] > h1 {
+		opacity:1;
+		transform: scale(.7);
+		transition: opacity .5s, transform .5s;
+		}
+	#logo > h1 {
+		opacity: 0;
+		transform: scale(.6);
+		transition: opacity .2s, transform .2s;
+		color: var(--black);
+		font-family: 'Pacifico', serif;
+		font-size: 100px;
+		text-shadow: 2px 2px 0 var(--gold);
+		}
+		/*
+		#logo > h1:before {
+			margin: -10px;
+			padding: 10px;
+			content: attr(shadow);
+			text-shadow: none;
+			background: linear-gradient(
+				to right,
+				var(--coral),
+				var(--green),
+				var(--green),
+				var(--pink),
+				var(--pink),
+				var(--coral)
+				);
+		  background-size: 1000%;
+			background-clip: text;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+	
+			animation: logo-text 30s linear infinite;
+			}
+		*/
+		#logo > h1:after {
+		content: attr(shadow);
+		margin: -10px;
+		padding: 10px;
+		top: .06em; left: .06em;
+		text-shadow: none;
+		z-index: -1;
+		background: linear-gradient(
+			45deg,
+			transparent 45%,
+			black 45%,
+			black 55%,
+			transparent 0
+			);
+		background-size: .05em .05em;
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		animation: logo-shade 15s linear infinite;
+		}
+	#logo > h1 > .star {
+		--size: clamp(20px, 1.5vw, 30px);
+		
+		animation: scale 700ms ease forwards;
+		display: block;
+		height: var(--size);
+		left: var(--star-left);
+		position: absolute;
+		top: var(--star-top);
+		width: var(--size);
+	}
+	
+	#logo > h1 > .star > svg {
+		animation: rotate 1000ms linear infinite;
+		display: block;
+		opacity: 0.7;
+	}
+	
+	#logo > h1 > .star > svg > path {
+		fill: var(--white);
+	}
+	#logo > h1 > .title {
+		position: absolute;
+		top:0; left: 0;
+		color: transparent;
+		text-shadow: 0 0 10px rgba(0, 0, 0, .2);
+	}	#logo > h1 > .subtitle {
+		position: absolute;
+		color: var(--gold);
+		font-family: 'Kaushan Script';
+		font-size: 40px;
+		top: 65%; left:25%;
+		text-shadow:
+		0 6px 1px rgba(0,0,0,.1),
+		0 0 5px rgba(0,0,0,.1),
+		0 1px 3px rgba(0,0,0,.3),
+		0 3px 5px rgba(0,0,0,.2),
+		0 5px 10px rgba(0,0,0,.25),
+		0 10px 10px rgba(0,0,0,.2),
+		0 20px 20px rgba(0,0,0,.15);
+	}

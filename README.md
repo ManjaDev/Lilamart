@@ -1,2 +1,2 @@
 # Lilamart
-Lila Online Store
+Online Shop

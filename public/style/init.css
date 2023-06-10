@@ -1,0 +1,16 @@
+:root {
+	--black:#222;
+	--gold:#FA1;
+	--green:#5A8;
+	--coral:#E65;
+	--pink:#B48;
+}
+body {
+	margin:0; padding:0;
+	background-color: var(--gold);
+	text-align: center;
+}
+div {
+	margin:0; padding:0;
+	text-align: center;
+}

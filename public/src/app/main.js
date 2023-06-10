@@ -6,33 +6,38 @@
  * @description main script
  * @async
  */
-(async $ => { 'use strict'
+(async () => { 'use strict'
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		PREFIXES
+		STYLES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	// to import js, css, json, & data as strings
-	await new Promise(solve=>fetch('./src/util/load.js')
-	.then(type=>type.text())
-	.then(data=>solve(Function(data)())))
-
-	// shorthand for createElement & set StyleSheets
-	await load('./src/util/element.js')
-
+	await load('font.css')
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		UTILITIES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	// encrypt & decrypt data
-	 await load('./src/util/crypt.js')
+	// console overrides
+	// await load('util/console.js')
+	// math utilities
+	await load('util/math.js')
+	// shorthand for createElement & set StyleSheets
+	await load('util/element.js')
+	// animation library
+	await load('lib/anime.min.js')
 
+	// initial css
+	await load('app/css.js')
+
+	// logo page
+	const logo = new (await load('page/logo.js'))
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		STYLESHEETS
+		FIREBASE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	await load('./style/main.css')
-	
+	// firebase auth, firestore, & storage
+	// const app = await (new (await load('app/fire.js'))).init('auth', 'firestore', 'storage')
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		LOAD PAGES
+		PAGES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	// splash page
-	await load('./src/page/splash.js')
-
-})({})
+	const splash = new (await load('page/splash.js'))
+	splash.show()
+	// check login status
+})()

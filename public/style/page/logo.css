@@ -1,14 +1,6 @@
-/* FONTS */
-@import url(//fonts.googleapis.com/css?family=Pacifico&text=Lilamrt);
-@import url(//fonts.googleapis.com/css?family=Kaushan+Script&text=OnlineShop);
-:root {
-	--black:hsl(0, 0%, 15%);
-	--white:hsl(0, 0%, 100%);
-	--gold:hsl(43, 98%, 51%);
-	--green:hsl(151, 38%, 54%);
-	--coral:hsl(8, 91%, 67%);
-	--pink:hsl(330, 46%, 55%);
-}
+/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	KEYFRAMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 @keyframes logo-shade {
 	0% {background-position: 0 0}
 	0% {background-position: 100% -100%}
@@ -21,15 +13,13 @@
   from, to {transform: scale(0)}
   50% {transform: scale(1.3)}
 }
-
 @keyframes rotate {
   from {transform: rotate(0deg)}
   to {transform: rotate(180deg)}
 }
-body {
-	background-color: var(--gold);
-	text-align: center;
-}
+/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	STYLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 #logo {
 	user-select: none;
 	overflow: visible;
@@ -101,8 +91,8 @@ body {
 			transparent 0
 			);
 		background-size: .05em .05em;
-		background-clip: text;
 		-webkit-background-clip: text;
+		background-clip: text;
 		-webkit-text-fill-color: transparent;
 		animation: logo-shade 15s linear infinite;
 		}
@@ -127,17 +117,16 @@ body {
 	#logo > h1 > .star > svg > path {
 		fill: var(--white);
 	}
-	#logo > h1 > .title {
+	#logo > h1 > #title {
 		position: absolute;
 		top:0; left: 0;
 		color: transparent;
 		text-shadow: 0 0 10px rgba(0, 0, 0, .2);
-	}	#logo > h1 > .subtitle {
+	}	#logo > #subtitle {
 		position: absolute;
 		color: var(--gold);
 		font-family: 'Kaushan Script';
 		font-size: 40px;
-		top: 65%; left:25%;
 		text-shadow:
 		0 6px 1px rgba(0,0,0,.1),
 		0 0 5px rgba(0,0,0,.1),

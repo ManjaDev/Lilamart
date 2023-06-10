@@ -3,33 +3,55 @@
  * @copyright MANJA 2023
  * 
  * @name element
- * @description shorthand for createElement & set StyleSheets
+ * @description shorthand for createElement & setStyleSheets
  * @param { Element.newChild(<type>,..<attributes>) | Element.css = {<key>:<value>} }
  */
-'use strict'
-Element.prototype.newChild = function(element, ...attributes) {
-	let el = document.createElement(element);
-	attributes.forEach(attr => {
-		attr = attr.split('|');
-		let name  = attr[0];
-		let value = attr[1]
-		if (!value) value = '';
-		el.setAttribute(name, value);
-	});
-	Object.defineProperty(el, 'css', {
-		set: function(css) {
-			Object.entries(css).forEach(([key, value]) => {
-				let fix = [null, 'Ms', 'Moz', 'Webkit'];
-				for(let i=0, len=fix.length, type; i<len; i++) {
-					type = !i ? key : fix[i]+key.replace(key[0], key[0].toUpperCase());
-					if(typeof this.style[type] === 'string') {
-						this.style[type] = value;
-						break;
-					}
-				}
-			});
-		}
-	});
-	this.append(el);
-	return el;
-}
+(async () => { 'use strict'
+	let fix = [null, 'Ms', 'Moz', 'Webkit']
+	let style = function(css) {
+		console.log(css)
+		Object.entries(css).forEach(([key, value]) => {
+			if(key[1] === '-') {
+				this.style.setProperty(key, value)
+				return
+			}
+			for(let i=0, len=fix.length, type; i<len; i++) {
+				type = !i ? key : fix[i]+key.replace(key[0], key[0].toUpperCase())
+				if(typeof this.style[type] === 'string') this.style[type] = value
+			}
+		})
+	}
+	Object.defineProperty(document.body, 'css', { set:style })
+	Element.prototype.newChild = function(element, attr) {
+		let parent = this
+		let el = document.createElement(element)
+		let before = getComputedStyle(el, ':before')
+		let after = getComputedStyle(el, ':after')
+
+		el[':before'] = before
+		el[':after'] = after
+
+		if(!!attr) Object.entries(attr).forEach(([name,value]) => el.setAttribute(name, value))
+
+
+		Object.defineProperty(el, 'css', { set:style })
+	
+		Object.defineProperty(el, 'enable', {
+			get: () => parent.append(el)
+		})
+
+		Object.defineProperty(el, 'disable', {
+			get: () => el.remove()
+		})
+
+		Object.defineProperty(el, 'duplicate', {
+			get: () => {
+				parent.append(el.cloneNode(true))
+				return el
+			}
+		})
+
+		el.enable
+		return el
+	}
+})()

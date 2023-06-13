@@ -28,6 +28,9 @@
 
 	// logo page
 	const logo = new (await load('page/logo.js'))
+	logo.show(logo.mode.INTRO, 'Online Shop')
+	await Math.wait(2000)
+
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		FIREBASE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -36,6 +39,7 @@
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		PAGES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	logo.show(logo.mode.LOGIN, 'Masuk Dengan Akun :')
 	// splash page
 	const splash = new (await load('page/splash.js'))
 	splash.show()

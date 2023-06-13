@@ -8,8 +8,7 @@
  */
 (async () => { 'use strict'
 	let fix = [null, 'Ms', 'Moz', 'Webkit']
-	let style = function(css) {
-		console.log(css)
+	let css = function(css) {
 		Object.entries(css).forEach(([key, value]) => {
 			if(key[1] === '-') {
 				this.style.setProperty(key, value)
@@ -21,10 +20,33 @@
 			}
 		})
 	}
-	Object.defineProperty(document.body, 'css', { set:style })
+	let define_property = (parent, el) => {
+		Object.defineProperty(el, 'css', { set:css })	
+		Object.defineProperty(el, 'enable', { get: () => parent.append(el) })
+		Object.defineProperty(el, 'disable', { get: () => el.remove() })
+		Object.defineProperty(el, 'clone', {
+			get: () => {
+				let node = el.cloneNode(true)
+				define_property(parent, node)
+				parent.append(node)
+				return node
+			}
+		})
+	}
+	Object.defineProperty(document.body, 'css', { set:css })
+
 	Element.prototype.newChild = function(element, attr) {
 		let parent = this
-		let el = document.createElement(element)
+		let el
+		switch(element) {
+			case 'svg':
+			case 'path':
+				el = document.createElementNS('http://www.w3.org/2000/svg', element)
+				break
+			default:
+				el = document.createElement(element)
+				break
+		}
 		let before = getComputedStyle(el, ':before')
 		let after = getComputedStyle(el, ':after')
 
@@ -32,25 +54,7 @@
 		el[':after'] = after
 
 		if(!!attr) Object.entries(attr).forEach(([name,value]) => el.setAttribute(name, value))
-
-
-		Object.defineProperty(el, 'css', { set:style })
-	
-		Object.defineProperty(el, 'enable', {
-			get: () => parent.append(el)
-		})
-
-		Object.defineProperty(el, 'disable', {
-			get: () => el.remove()
-		})
-
-		Object.defineProperty(el, 'duplicate', {
-			get: () => {
-				parent.append(el.cloneNode(true))
-				return el
-			}
-		})
-
+		define_property(parent, el)
 		el.enable
 		return el
 	}

@@ -6,11 +6,11 @@
  * @description main script
  * @async
  */
-(async () => { 'use strict'
+(async $ => { 'use strict'
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		STYLES
+		CONFIG
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	await load('font.css')
+	const config = await(new(await load('app/config.js'))).init($)
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		UTILITIES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -22,26 +22,29 @@
 	await load('util/element.js')
 	// animation library
 	await load('lib/anime.min.js')
-
+	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		INITIAL PAGE
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	// initial head
+	await(new(await load('page/head.js'))).init(config)
 	// initial css
-	await load('app/css.js')
-
+	await(new(await load('page/css.js'))).init(config)
 	// logo page
-	const logo = new (await load('page/logo.js'))
-	logo.show(logo.mode.INTRO, 'Online Shop')
-	await Math.wait(2000)
-
+	const logo = await(new(await load('page/logo.js'))).init(config)
+	logo.show(logo.MODE.INTRO, 'Online Shop')
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		FIREBASE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	let timer = performance.now()
 	// firebase auth, firestore, & storage
-	// const app = await (new (await load('app/fire.js'))).init('auth', 'firestore', 'storage')
+	const app = await(new(await load('app/fire.js'))).init('auth', 'firestore', 'storage')
+	if (performance.now() - timer < 1000) await Math.wait(1000)
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		PAGES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	logo.show(logo.mode.LOGIN, 'Masuk Dengan Akun :')
-	// splash page
-	const splash = new (await load('page/splash.js'))
-	splash.show()
+	logo.show(logo.MODE.LOGIN, 'Login')
+	// login page
+	const login = await(new(await load('page/login.js'))).init(config)
+	login.show()
 	// check login status
-})()
+})({})

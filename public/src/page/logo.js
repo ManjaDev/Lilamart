@@ -9,28 +9,28 @@
 (async () => {
 	class logo {
 		el = {}
-		css = {}
-		text = {
-			title:'Lilamart',
-			subtitle:'Online Shop'
-		}
-		mode = {
+		MODE = {
 			INTRO:0,
 			LOGIN:1,
 			TITLE:2,
 			HIDDEN:3,
 		}
-		config = {
-			mode:this.mode.INTRO,
-		}
+		config = {}
 
-		constructor() {
-			this.init()
-		}
+		constructor() {}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			INIT
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-		init = async () => {
+		init = async config => {
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				FONTS
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			/* @import url(//fonts.googleapis.com/css?family=Pacifico&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz); */
+			await load('font/pacifico.woff2')
+			/* @import url(//fonts.googleapis.com/css?family=Kaushan+Script&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz); */
+			await load('font/kaushan-script.woff2')
+			
+
 			// prefixes
 			let _ = this.el
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -50,11 +50,11 @@
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			_.title_shadow = _.logo.newChild('div')
 			_.title = _.logo.newChild('div')
-			_.title.textContent = this.text.title
-			_.title_shadow.textContent = this.text.title
+			_.title.textContent = config.app.title
+			_.title_shadow.textContent = config.app.title
 			_.title.css = _.title_shadow.css = {
 				position:'absolute',
-				fontFamily:'Pacifico, serif',
+				fontFamily:'Pacifico',
 				fontSize:'100px',
 				fontWeight:'bold',
 				whiteSpace:'nowrap',
@@ -153,20 +153,27 @@
 				anim()
 			}
 			addEventListener('resize', this.resize)
+			return this
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			SHOW
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		show = async (mode, subtitle) => {
-			this.config.mode = mode
 			let _ = this.el
+			if (this.config.mode === this.MODE.HIDDEN) _.logo.enable
+			this.config.mode = mode
 			_.logo.css = {
 				transition:'scale .5s, opacity .5s, left 0s, top .5s',
 				opacity:1,
 			}
 			this.resize()
 			if (!subtitle) return
-			this.text.subtitle = subtitle
+			for (let child of _.subtitle.children) {
+				child.style.transition = 'opacity .2s'
+				child.style.opacity = 0
+			}
+			await Math.wait(200)
+			this.config.subtitle = subtitle
 			_.subtitle.innerHTML = subtitle.replace(/\S/g, '<span>$&</span>')
 			for (let child of _.subtitle.children) {
 				child.style.opacity = 0
@@ -175,9 +182,8 @@
 			}
 			_.subtitle.css = {
 				left:`${-(_.subtitle.clientWidth/2)}px`,
-				top:`${-(_.subtitle.clientHeight/2)+10}px`,
+				top:`${-20}px`,
 			}
-			await Math.wait(500)
 			anime({
 				targets: _.subtitle.children,
 				opacity:[0,1],
@@ -200,7 +206,9 @@
 				scale:parseFloat(_.logo.style.scale)-.1,
 				opacity:0,
 			}
-			this.config.mode = this.mode.HIDDEN
+			await Math.wait(200)
+			_.logo.disable
+			this.config.mode = this.MODE.HIDDEN
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			RESIZE
@@ -208,21 +216,21 @@
 		resize = async () => {
 			let _ = this.el
 			switch(this.config.mode) {
-				case this.mode.INTRO:
+				case this.MODE.INTRO:
 					_.logo.css = {
 						scale:.8,
 						left:`${innerWidth/2}px`,
 						top:`${innerHeight/2}px`,
 					}
 					break
-				case this.mode.LOGIN:
+				case this.MODE.LOGIN:
 					_.logo.css = {
 						scale:.7,
 						left:`${innerWidth/2}px`,
 						top:`${innerHeight/2-200}px`,
 					}
 					break
-				case this.mode.TITLE:
+				case this.MODE.TITLE:
 					_.logo.css = {
 						scale:.4,
 						left:`${innerWidth/2}px`,

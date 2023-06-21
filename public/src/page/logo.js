@@ -7,38 +7,31 @@
  * @async @class
  */
 (async () => {
-	class logo {
+	return new class {
 		el = {}
+		config = {}
 		MODE = {
 			INTRO:0,
 			LOGIN:1,
 			TITLE:2,
-			HIDDEN:3,
+			HIDE:3,
 		}
-		config = {}
-
-		constructor() {}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			INIT
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-		init = async config => {
+		init = async $ => {
+			this.$ = $
+			let _ = this.el
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				FONTS
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			/* @import url(//fonts.googleapis.com/css?family=Pacifico&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz); */
 			await load('font/pacifico.woff2')
-			/* @import url(//fonts.googleapis.com/css?family=Kaushan+Script&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz); */
 			await load('font/kaushan-script.woff2')
-			
-
-			// prefixes
-			let _ = this.el
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				LOGO
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			_.logo = document.body.newChild('div')
 			_.logo.css = {
-				userSelect:'none',
 				overflow:'visible',
 				width:0, height:0,
 				position:'absolute',
@@ -50,8 +43,8 @@
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			_.title_shadow = _.logo.newChild('div')
 			_.title = _.logo.newChild('div')
-			_.title.textContent = config.app.title
-			_.title_shadow.textContent = config.app.title
+			_.title.textContent = $.config.app.title
+			_.title_shadow.textContent = $.config.app.title
 			_.title.css = _.title_shadow.css = {
 				position:'absolute',
 				fontFamily:'Pacifico',
@@ -90,7 +83,7 @@
 			_.subtitle.css = {
 				position:'absolute',
 				fontFamily:'Kaushan Script',
-				fontSize:'40px',
+				fontSize:'50px',
 				fontWeight:'bold',
 				whiteSpace:'nowrap',
 				color:'var(--col_neutral)',
@@ -109,7 +102,6 @@
 			}
 			let svg = _.star.newChild('svg', { viewBox:'0 0 512 512' })
 			svg.css = {
-				'--size': '30px',
 				position: 'absolute',
 				width: 'var(--size)',
 				height: 'var(--size)',
@@ -122,7 +114,9 @@
 				opacity:'.8',
 			}
 			svg.clone.clone
-
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				STAR ANIMATIOH
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			for(let star of _.star.children) {
 				star.animate(
 					[
@@ -137,6 +131,7 @@
 				)
 				let anim = () => {
 					star.css = {
+						'--size': `${Math.rand(15,30)}px`,
 						left:`calc(${Math.rand(0, 100)}% - var(--size)/2)`,
 						top:`calc(${Math.rand(0, 100)}% - var(--size)/2)`,
 					}
@@ -160,7 +155,8 @@
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		show = async (mode, subtitle) => {
 			let _ = this.el
-			if (this.config.mode === this.MODE.HIDDEN) _.logo.enable
+			let wait = this.$.wait
+			if (this.config.mode === this.MODE.HIDE) _.logo.enable
 			this.config.mode = mode
 			_.logo.css = {
 				transition:'scale .5s, opacity .5s, left 0s, top .5s',
@@ -172,7 +168,7 @@
 				child.style.transition = 'opacity .2s'
 				child.style.opacity = 0
 			}
-			await Math.wait(200)
+			await wait(200)
 			this.config.subtitle = subtitle
 			_.subtitle.innerHTML = subtitle.replace(/\S/g, '<span>$&</span>')
 			for (let child of _.subtitle.children) {
@@ -201,14 +197,15 @@
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		hide = async () => {
 			let _ = this.el
+			let wait = this.$.wait
 			_.logo.css = {
 				transition:'scale .2s, opacity .2s, left 0s, top 0s',
 				scale:parseFloat(_.logo.style.scale)-.1,
 				opacity:0,
 			}
-			await Math.wait(200)
+			await wait(200)
 			_.logo.disable
-			this.config.mode = this.MODE.HIDDEN
+			this.config.mode = this.MODE.HIDE
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			RESIZE
@@ -227,7 +224,7 @@
 					_.logo.css = {
 						scale:.7,
 						left:`${innerWidth/2}px`,
-						top:`${innerHeight/2-200}px`,
+						top:`${innerHeight/2-300}px`,
 					}
 					break
 				case this.MODE.TITLE:
@@ -240,5 +237,4 @@
 			}
 		}
 	}
-	return logo
 })()

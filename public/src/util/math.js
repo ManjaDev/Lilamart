@@ -6,9 +6,7 @@
  * @description Math Utilities
  * @param {
 * 	Math.rand(<min>,<max>)
-* 	Math.wait(<duration>)
 * }
  */
 'use strict'
-Math.rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
-Math.wait = duration => new Promise(s => setTimeout(s,duration))
+Math.rand = (min, max) => Math.trunc(Math.random() * (max - min + 1)) + min

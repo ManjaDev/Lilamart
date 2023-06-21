@@ -7,26 +7,28 @@
  * @async @class
  */
 (async () => { 'use strict'
-	class config {
-		constructor(){}
+	return new class {
 		init = async $ => {
 			// client : chat, cart, shop, notification, setting
 			// admin : dashboard, report, transaction, goods, chat, notification, setting
 			$.PAGE = {
-				LOGIN:0,
-				CART:1,
-				SHOP:1,
-				CHAT:2,
-				NOTIFICATION:3,
-				SETTING:5,
-				GOODS:4,
+				CART:Symbol(),
+				SHOP:Symbol(),
+				CHAT:Symbol(),
+				LOGIN:Symbol(),
+				GOODS:Symbol(),
+				REPORT:Symbol(),
+				SETTING:Symbol(),
+				DASHBOARD:Symbol(),
+				TRANSACTION:Symbol(),
+				NOTIFICATION:Symbol(),
 			}
 			$.LOGIN_AS = {
-				GUEST:0,
-				ADMIN:1,
-				CLIENT:2,
+				GUEST:Symbol(),
+				ADMIN:Symbol(),
+				CLIENT:Symbol(),
 			}
-			const config = {
+			return {
 				page:$.PAGE.LOGIN,
 				login_as:$.LOGIN_AS.GUEST,
 				app:{
@@ -34,7 +36,7 @@
 					description:'Lila Online Shop',
 					keywords:['lilamart','online','shop','store','toko','lila','web','mart'],
 					icon:'favicon.ico',
-					lang:'id-ID',
+					lang:'id',
 					charset:'utf-8',
 					viewport:{
 						width:'device-width',
@@ -59,8 +61,6 @@
 					darker:'#342609',
 				},
 			}
-			return config
 		}
 	}
-	return config
 })()

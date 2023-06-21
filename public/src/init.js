@@ -3,7 +3,7 @@
  * @copyright MANJA 2023
  * 
  * @name init
- * @description init script
+ * @description initial script
  * @async
  */
 (async $ => { 'use strict'
@@ -14,6 +14,4 @@
 	.then(type=>type.text())
 	.then(data=>solve(eval(data))))
 	await load('app/main.js')
-	try {
-	} catch (error) {}
 })({})

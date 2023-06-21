@@ -3,19 +3,17 @@
  * @copyright MANJA 2023
  * 
  * @name main
- * @description main script
+ * @description main app
  * @async
  */
 (async $ => { 'use strict'
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		CONFIG
-	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	const config = await(new(await load('app/config.js'))).init($)
-	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		UTILITIES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	// pause the execution 
+	const wait = $.wait = duration => new Promise(s => setTimeout(s,duration))
 	// console overrides
-	// await load('util/console.js')
+	await load('util/console.js')
 	// math utilities
 	await load('util/math.js')
 	// shorthand for createElement & set StyleSheets
@@ -23,28 +21,36 @@
 	// animation library
 	await load('lib/anime.min.js')
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		MAIN CONFIG
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	$.config = await(await load('app/config.js')).init($)
+	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		INITIAL PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	// initial head
-	await(new(await load('page/head.js'))).init(config)
+	await(await load('page/head.js')).init($)
 	// initial css
-	await(new(await load('page/css.js'))).init(config)
+	await(await load('page/css.js')).init($)
 	// logo page
-	const logo = await(new(await load('page/logo.js'))).init(config)
+	const logo = $.logo = await(await load('page/logo.js')).init($)
 	logo.show(logo.MODE.INTRO, 'Online Shop')
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		FIREBASE
+		FIREBASE APPS
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	let timer = performance.now()
 	// firebase auth, firestore, & storage
-	const app = await(new(await load('app/fire.js'))).init('auth', 'firestore', 'storage')
-	if (performance.now() - timer < 1000) await Math.wait(1000)
+	const fire = $.fire = await(await load('app/fire.js')).init('auth')
+	if (performance.now() - timer < 1000) await wait(1000)
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		PAGES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	logo.show(logo.MODE.LOGIN, 'Login')
-	// login page
-	const login = await(new(await load('page/login.js'))).init(config)
-	login.show()
 	// check login status
+	if (fire.auth.currentUser === null) {
+		// login page
+		const login = $.login = await(await load('page/login.js')).init($)
+		login.show()
+	}
+	else {
+		fire.auth
+	}
 })({})

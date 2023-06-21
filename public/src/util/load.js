@@ -4,7 +4,7 @@
  * 
  * @name load
  * @description import js, css, json, & data as strings
- * @param {load(<url>)}
+ * @async @param {load(<url>)}
  */
 (async () => { 'use strict'
 	// JS & CSS LOADER
@@ -24,7 +24,7 @@
 	}
 	const load_list = []
 	const load = (link, options) => {
-		// check of link already loaded
+		// check if link already loaded
 		if (load_list.some(e => e === link)) return
 		load_list.push(link)
 		// parse extension
@@ -38,16 +38,13 @@
 				.then(response => {
 					if(response.ok && !key) {
 						switch(ext) {
-							case DOT.CSS:
-							case DOT.JS:
-								return response.text()
-								break
 							case DOT.WOFF:
 							case DOT.WOFF2:
 							case DOT.TTF:
 							case DOT.OTF:
 								return response.arrayBuffer()
-								break
+							default:
+								return response.text()
 						}
 					}
 					else if(!response.ok && !key) throw get(`${link}.cry`,true)

@@ -7,9 +7,9 @@
  * @async @class
  */
 (async () => { 'use strict'
-	class fire {
+	return new class {
+		version = '9.22.2'
 		el = {}
-		version = '9.22.0'
 		link = {
 			app					: `/__/firebase/${this.version}/firebase-app-compat.js`,
 			auth				: `/__/firebase/${this.version}/firebase-auth-compat.js`,
@@ -23,7 +23,6 @@
 			performance	: `/__/firebase/${this.version}/firebase-performance-compat.js`,
 			init				: `/__/firebase/init.js${location.hostname==='127.0.0.1'?'?useEmulator=true':''}`
 		}
-		constructor() {}
 		/**
 		 * @param {string} features
 		 * @returns {this}
@@ -34,8 +33,9 @@
 			for (let feature of features)
 				this.el[feature] = await this.load(this.link[feature])
 			await this.load(this.link.init)
-			const app = firebase.app()
-			for (let feature of features) this[feature] = await app[feature]()
+			this.app = firebase
+			for (let feature of features)
+				this[feature] = await firebase[feature]()
 			delete globalThis.firebase
 			return this
 		}
@@ -50,5 +50,4 @@
 			})
 		}
 	}
-	return fire
 })()

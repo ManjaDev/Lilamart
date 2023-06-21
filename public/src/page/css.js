@@ -7,36 +7,26 @@
  * @async @class
  */
 (async () => { 'use strict'
-	class css {
-		constructor() {}
-		init = async config => {
-			let body = document.body
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				COLORS
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			body.css = {
-				'--col_white':config.color.white,
-				'--col_black':config.color.black,
-				'--col_gold':config.color.gold,
-				'--col_green':config.color.green,
-				'--col_coral':config.color.coral,
-				'--col_pink':config.color.pink,
-				'--col_lighter':config.color.lighter,
-				'--col_light':config.color.light,
-				'--col_neutral':config.color.neutral,
-				'--col_dark':config.color.dark,
-				'--col_darker':config.color.darker,
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				INITIALS
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			body.css = {
+	return new class {
+		init = async $ => {
+			document.body.css = {
+				'--col_white':$.config.color.white,
+				'--col_black':$.config.color.black,
+				'--col_gold':$.config.color.gold,
+				'--col_green':$.config.color.green,
+				'--col_coral':$.config.color.coral,
+				'--col_pink':$.config.color.pink,
+				'--col_lighter':$.config.color.lighter,
+				'--col_light':$.config.color.light,
+				'--col_neutral':$.config.color.neutral,
+				'--col_dark':$.config.color.dark,
+				'--col_darker':$.config.color.darker,
 				margin:0,
 				padding:0,
 				background: 'var(--col_neutral)',
 				textAlign: 'center',
+				userSelect:'none',
 			}
 		}
 	}
-	return css
 })()

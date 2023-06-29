@@ -8,25 +8,36 @@
  */
 (async () => { 'use strict'
 	return new class {
-		init = async $ => {
-			// client : chat, cart, shop, notification, setting
-			// admin : dashboard, report, transaction, goods, chat, notification, setting
+		init = async () => {
 			$.PAGE = {
 				CART:Symbol(),
 				SHOP:Symbol(),
 				CHAT:Symbol(),
 				LOGIN:Symbol(),
-				GOODS:Symbol(),
+				STOCK:Symbol(),
 				REPORT:Symbol(),
+				ACCOUNT:Symbol(),
 				SETTING:Symbol(),
 				DASHBOARD:Symbol(),
 				TRANSACTION:Symbol(),
 				NOTIFICATION:Symbol(),
 			}
+			$.LOGIN = {
+				SKIP:Symbol(),
+				APPLE:Symbol(),
+				YAHOO:Symbol(),
+				EMAIL:Symbol(),
+				PHONE:Symbol(),
+				GOOGLE:Symbol(),
+				GITHUB:Symbol(),
+				TWITTER:Symbol(),
+				FACEBOOK:Symbol(),
+				MICROSOFT:Symbol(),
+			}
 			$.LOGIN_AS = {
-				GUEST:Symbol(),
 				ADMIN:Symbol(),
 				CLIENT:Symbol(),
+				ANONYM:Symbol(),
 			}
 			return {
 				page:$.PAGE.LOGIN,

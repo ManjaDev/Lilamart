@@ -6,7 +6,7 @@
  * @description import js, css, json, & data as strings
  * @async @param {load(<url>)}
  */
-(async () => { 'use strict'
+(async $ => { 'use strict'
 	// JS & CSS LOADER
 	const DOT = {
 		JS:'js',
@@ -102,4 +102,4 @@
 		})
 	}
 	return load
-})()
+})({})

@@ -8,7 +8,7 @@
  */
 (async () => { 'use strict'
 	return new class {
-		init = async $ => {
+		init = async () => {
 			document.body.css = {
 				'--col_white':$.config.color.white,
 				'--col_black':$.config.color.black,

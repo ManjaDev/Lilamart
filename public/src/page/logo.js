@@ -8,20 +8,30 @@
  */
 (async () => {
 	return new class {
-		el = {}
-		config = {}
-		MODE = {
-			INTRO:0,
-			LOGIN:1,
-			TITLE:2,
-			HIDE:3,
+		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+			CONSTRUCTOR
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+		constructor() {
+			this.el = {}
+			this.config = {}
+			this.MODE = {
+				INTRO:Symbol(),
+				LOGIN:Symbol(),
+				TITLE:Symbol(),
+				HIDE:Symbol(),
+			}
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			INIT
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-		init = async $ => {
-			this.$ = $
-			let _ = this.el
+		init = async () => {
+			const _ = this.el
+			const MODE = this.MODE
+			const config = this.config
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				CONFIG
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			config.mode = MODE.HIDE
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				FONTS
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -90,7 +100,7 @@
 				textShadow:`0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15)`
 			}
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				STAR
+				STAR SVG
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			_.star = _.logo.newChild('div')
 			_.star.css = {
@@ -99,25 +109,20 @@
 				height: `${145}px`,
 				left:`${-(_.title.clientWidth/2)-10}px`,
 				top:`${-106}px`,
-			}
-			let svg = _.star.newChild('svg', { viewBox:'0 0 512 512' })
-			svg.css = {
-				position: 'absolute',
-				width: 'var(--size)',
-				height: 'var(--size)',
-			}
-			let path = svg.newChild('path', {
-				d:'M512 255.1c0 11.34-7.406 20.86-18.44 23.64l-171.3 42.78l-42.78 171.1C276.7 504.6 267.2 512 255.9 512s-20.84-7.406-23.62-18.44l-42.66-171.2L18.47 279.6C7.406 276.8 0 267.3 0 255.1c0-11.34 7.406-20.83 18.44-23.61l171.2-42.78l42.78-171.1C235.2 7.406 244.7 0 256 0s20.84 7.406 23.62 18.44l42.78 171.2l171.2 42.78C504.6 235.2 512 244.6 512 255.1z',
-			})
-			path.css = {
 				fill:'var(--col_lighter)',
 				opacity:'.8',
 			}
-			svg.clone.clone
+			const svg = await load(`icon/star.svg`)
+			_.star.innerHTML = svg+svg+svg
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				STAR ANIMATIOH
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			for(let star of _.star.children) {
+			for (const star of _.star.children) {
+				star.css = {
+					position:'absolute',
+					width:'var(--size)',
+					height:'var(--size)',
+				}
 				star.animate(
 					[
 						{rotate:'0deg'},
@@ -129,7 +134,7 @@
 						iterations:Infinity,
 					}
 				)
-				let anim = () => {
+				const anim = () => {
 					star.css = {
 						'--size': `${Math.rand(15,30)}px`,
 						left:`calc(${Math.rand(0, 100)}% - var(--size)/2)`,
@@ -147,35 +152,54 @@
 				}
 				anim()
 			}
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				RESIZE EVENT
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			this.resize()
 			addEventListener('resize', this.resize)
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				RETURN
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			return this
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			SHOW
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		show = async (mode, subtitle) => {
-			let _ = this.el
-			let wait = this.$.wait
-			if (this.config.mode === this.MODE.HIDE) _.logo.enable
-			this.config.mode = mode
+			const _ = this.el
+			const wait = $.wait
+			const MODE = this.MODE
+			const config = this.config
+
+			if (config.mode === MODE.HIDE) _.logo.enable
+
+			config.mode = mode
+			config.lang = $.config.app.lang
+
 			_.logo.css = {
 				transition:'scale .5s, opacity .5s, left 0s, top .5s',
 				opacity:1,
 			}
 			this.resize()
+
 			if (!subtitle) return
-			for (let child of _.subtitle.children) {
-				child.style.transition = 'opacity .2s'
-				child.style.opacity = 0
-			}
+			config.subtitle = subtitle
+
+			for (let child of _.subtitle.children)
+				child.css = {
+					transition:'opacity .2s',
+					opacity:0,
+				}
 			await wait(200)
-			this.config.subtitle = subtitle
-			_.subtitle.innerHTML = subtitle.replace(/\S/g, '<span>$&</span>')
-			for (let child of _.subtitle.children) {
-				child.style.opacity = 0
-				child.style.transformOrigin = '0 0'
-				child.style.display = 'inline-block'
-			}
+
+			_.subtitle.innerHTML = subtitle[config.lang].replace(/\S/g, '<span>$&</span>')
+
+			for (let child of _.subtitle.children)
+				child.css = {
+					opacity:0,
+					transformOrigin:'0 0',
+					display:'inline-block',
+				}
 			_.subtitle.css = {
 				left:`${-(_.subtitle.clientWidth/2)}px`,
 				top:`${-20}px`,
@@ -196,8 +220,12 @@
 			HIDE
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		hide = async () => {
-			let _ = this.el
-			let wait = this.$.wait
+			if (this.config.mode === this.MODE.HIDE) return
+			else this.config.mode = this.MODE.HIDE
+
+			const _ = this.el
+			const wait = $.wait
+
 			_.logo.css = {
 				transition:'scale .2s, opacity .2s, left 0s, top 0s',
 				scale:parseFloat(_.logo.style.scale)-.1,
@@ -205,29 +233,31 @@
 			}
 			await wait(200)
 			_.logo.disable
-			this.config.mode = this.MODE.HIDE
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			RESIZE
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		resize = async () => {
-			let _ = this.el
-			switch(this.config.mode) {
-				case this.MODE.INTRO:
+			const _ = this.el
+			const MODE = this.MODE
+			const config = this.config
+
+			switch(config.mode) {
+				case MODE.INTRO:
 					_.logo.css = {
 						scale:.8,
 						left:`${innerWidth/2}px`,
 						top:`${innerHeight/2}px`,
 					}
 					break
-				case this.MODE.LOGIN:
+				case MODE.LOGIN:
 					_.logo.css = {
 						scale:.7,
 						left:`${innerWidth/2}px`,
-						top:`${innerHeight/2-300}px`,
+						top:`${innerHeight/2-400}px`,
 					}
 					break
-				case this.MODE.TITLE:
+				case MODE.TITLE:
 					_.logo.css = {
 						scale:.4,
 						left:`${innerWidth/2}px`,

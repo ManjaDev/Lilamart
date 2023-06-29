@@ -4,6 +4,7 @@
  * 
  * @name login
  * @description login page
+ * @version alpha
  * @async @class
  */
 (async () => { 'use strict'
@@ -14,186 +15,182 @@
 		constructor() {
 			this.el = {}
 			this.config = {}
-			this.MODE = {SHOW:Symbol(),HIDE:Symbol()}
-			const GET = this.GET = {
-				TEXT:{BUTTON:0},
-				LANG:{en:1,id:2},
-				ID:{
-					google:'google',
-					apple:'apple',
-					microsoft:'microsoft',
-					facebook:'facebook',
-					twitter:'twitter',
-					github:'github',
-					yahoo:'yahoo',
-					email:'email',
-					phone:'phone',
-					skip:'skip',
-				}
+			this.MODE = {
+				SHOW:Symbol(),
+				HIDE:Symbol(),
 			}
-			this.ID = {
-				google: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'GOOGLE'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'GOOGLE'
-						: null
-					)
+			this.GET = {
+				ID:{
+					[$.LOGIN.SKIP]:'skip',
+					[$.LOGIN.APPLE]:'apple',
+					[$.LOGIN.YAHOO]:'yahoo',
+					[$.LOGIN.EMAIL]:'email',
+					[$.LOGIN.PHONE]:'phone',
+					[$.LOGIN.GOOGLE]:'google',
+					[$.LOGIN.GITHUB]:'github',
+					[$.LOGIN.TWITTER]:'twitter',
+					[$.LOGIN.FACEBOOK]:'facebook',
+					[$.LOGIN.MICROSOFT]:'microsoft',
 				},
-				apple: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'APPLE'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'APPLE'
-						: null
-					)
+				LANG:{
+					EN:0b1,
+					ID:0b10,
 				},
-				microsoft: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'MICROSOFT'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'MICROSOFT'
-						: null
-					)
-				},
-				facebook: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'FACEBOOK'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'FACEBOOK'
-						: null
-					)
-				},
-				twitter: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'TWITTER'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'TWITTER'
-						: null
-					)
-				},
-				github: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'GITHUB'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'GITHUB'
-						: null
-					)
-				},
-				yahoo: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'YAHOO'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'YAHOO'
-						: null
-					)
-				},
-				email: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'EMAIL'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'EMAIL'
-						: null
-					)
-				},
-				phone: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'PHONE'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'TELEPON'
-						: null
-					)
-				},
-				skip: get => {
-					return (
-						get === (GET.TEXT.BUTTON | GET.LANG.en) ? 'SKIP'
-						: get === (GET.TEXT.BUTTON | GET.LANG.id) ? 'LEWATI'
-						: null
-					)
+				BUTTON:{
+					TEXT:0b100,
+					CLICK:0b1000,
 				},
 			}
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			INIT
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-		init = async $ => {
-			this.$ = $
+		init = async () => {
 			const _ = this.el
-			const ID = this.ID
-			const GET = this.GET
+			const MODE = this.MODE
+			const ID = this.GET.ID
+			const LANG = this.GET.LANG
+			const BUTTON = this.GET.BUTTON
 			const wait = $.wait
 			const app = $.fire.app
-			const auth = $.fire.auth
 			const config = this.config
-			config.lang = $.config.app.lang
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				CONFIG
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			config.mode = MODE.HIDE
+			config.lang = $.config.app.lang.toUpperCase()
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				LOGIN METHOD
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_success = result => {
-				console.info(result.credential.assessToken)
-			}
-			const login_error = error => {
-				console.error(error.code,error.message)
+			const _id = {
+				success: result => {
+					console.log('login success', result.toString())
+				},
+				error: error => {
+					console.error(error.code,error.message)
+				},
+				google: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'GOOGLE'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'GOOGLE'
+						: get === BUTTON.CLICK 
+						? async () => {
+								const provider = new app.auth.GoogleAuthProvider()
+								app.auth()
+								.signInWithPopup(provider)
+								.then(ID.success)
+								.catch(ID.error)
+							}
+						: null
+					)
+				},
+				apple: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'APPLE'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'APPLE'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('ap')
+							}
+						: null
+					)
+				},
+				microsoft: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'MICROSOFT'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'MICROSOFT'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('ms')
+							}
+						: null
+					)
+				},
+				facebook: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'FACEBOOK'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'FACEBOOK'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('fb')
+							}
+						: null
+					)
+				},
+				twitter: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'TWITTER'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'TWITTER'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('tw')
+							}
+						: null
+					)
+				},
+				github: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'GITHUB'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'GITHUB'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('gh')
+							}
+						: null
+					)
+				},
+				yahoo: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'YAHOO'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'YAHOO'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('yh')
+							}
+						: null
+					)
+				},
+				email: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'EMAIL'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'EMAIL'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('ml')
+							}
+						: null
+					)
+				},
+				phone: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'PHONE'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'TELEPON'
+						: get === BUTTON.CLICK
+						? async () => {
+								console.log('tp')
+							}
+						: null
+					)
+				},
+				skip: get => {
+					return (
+						  get === (BUTTON.TEXT | LANG.EN) ? 'SKIP'
+						: get === (BUTTON.TEXT | LANG.ID) ? 'LEWATI'
+						: get === BUTTON.CLICK
+						? async () => {
+								app.auth()
+								.signInAnonymously()
+								.then(result => {
+									config.login_as = $.LOGIN_AS.ANONYM
+								})
+								.catch(this.error)
+							}
+						: null
+					)
+				},
 			}
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				GOOGLE
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_google = async () => {
-				app.auth()
-				.signInWithPopup(new app.auth.GoogleAuthProvider())
-				.then(login_success)
-				.catch(login_error)
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				APPLE
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_apple = async () => {
-				console.log('ap')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				MICROSOFT
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_microsoft = async () => {
-				console.log('ms')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				FACEBOOK
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_facebook = async () => {
-				console.log('fb')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				TWITTER
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_twitter = async () => {
-				console.log('tw')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				GITHUB
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_github = async () => {
-				console.log('gh')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				YAHOO
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_yahoo = async () => {
-				console.log('yh')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				EMAIL
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_email = async () => {
-				console.log('ml')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				PHONE
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_phone = async () => {
-				console.log('tp')
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				SKIP
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const login_skip = async () => {
-				app.auth()
-				.signInAnonymously()
-				.then(login_success)
-				.catch(login_error)
-			}
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				FONTS
+				FONT
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			await load('font/lilita-one.woff2')
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -207,32 +204,34 @@
 				overflow:'visible',
 				width:0, height:0,
 				position:'absolute',
-				// scale:.8,
-				// opacity:0,
 				left:`${innerWidth/2}px`,
 				top:`${innerHeight/2}px`,
+				scale:.8,
+				opacity:0,
 			}
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				BUTTON
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			let create_button = async (...id) => {
-				for (let i=0; i<id.length; i++) {
-					_[id[i]] = _.login.newChild('div')
-					_[`${id[i]}_icon`] = _[id[i]].newChild('div')
-					_[`${id[i]}_text`] = _[id[i]].newChild('div')
-					
-					_[id[i]].css = {
+			const button = async (...ids) => {
+				for (let i = 0, id; i < ids.length; i++) {
+					id = ID[ids[i]]
+					_[id] = _.login.newChild('div')
+					_[`${id}_icon`] = _[id].newChild('div')
+					_[`${id}_text`] = _[id].newChild('div')
+					_[id].css = {
 						position:'absolute',
 						width:'var(--width)',
 						height:'var(--height)',
 						left:`calc(var(--width)/-2)`,
+						background:'var(--col_darker)',
 						border:'1px solid var(--col_darker)',
 						borderRadius:'calc(var(--height)/2)',
 					}
-					_[id[i]].css = {
-						top:`${(10+_[id[i]].clientHeight)*(i-(id.length/2)+1)}px`,
+					_[id].css = {
+						top:`${(10+_[id].clientHeight)*(i-(ids.length/2))}px`,
 					}
-					_[`${id[i]}_icon`].css = {
+					_[`${id}_icon`].css = {
+						'--radius':'calc(var(--height)/2)',
 						position:'absolute',
 						width:'var(--icon_size)',
 						height:'var(--icon_size)',
@@ -241,9 +240,9 @@
 						fill:'var(--col_neutral)',
 						background:'var(--col_darker)',
 						border:'1px solid var(--col_darker)',
-						borderRadius:'calc(var(--height)/2)',
+						borderRadius:'var(--radius) 0 0 var(--radius)',
 					}
-					_[`${id[i]}_text`].css = {
+					_[`${id}_text`].css = {
 						position:'relative',
 						display: 'table-cell',
 						verticalAlign:'middle',
@@ -251,52 +250,94 @@
 						height:'var(--height)',
 						left:'calc(var(--icon_size) + 20px)',
 						top:0,
-						color:'var(--col_darker)',
 						fontFamily:'Lilita One',
 						fontSize:'22px',
+						color:'var(--col_neutral)',
 					}
-					_[`${id[i]}_icon`].innerHTML = await load(`icon/${id[i]}.svg`)
-					_[`${id[i]}_text`].textContent = ID[id[i]](GET.TEXT.BUTTON | GET.LANG[config.lang])
-					_[id[i]].addEventListener('click',eval(`login_${id[i]}`))
+					_[`${id}_icon`].innerHTML = await load(`icon/${id}.svg`)
+					_[`${id}_text`].textContent = _id[id](BUTTON.TEXT|LANG[config.lang])
+					_[id].addEventListener('click',_id[id](BUTTON.CLICK))
 				}
 			}
-			await create_button(
-				GET.ID.google,
-				// GET.ID.apple,
-				// GET.ID.microsoft,
-				// GET.ID.facebook,
-				// GET.ID.twitter,
-				// GET.ID.github,
-				// GET.ID.yahoo,
-				GET.ID.email,
-				GET.ID.phone,
-				GET.ID.skip,
+			await button(
+				$.LOGIN.GOOGLE,
+				$.LOGIN.APPLE,
+				$.LOGIN.MICROSOFT,
+				$.LOGIN.FACEBOOK,
+				$.LOGIN.TWITTER,
+				$.LOGIN.GITHUB,
+				$.LOGIN.YAHOO,
+				$.LOGIN.EMAIL,
+				$.LOGIN.PHONE,
+				$.LOGIN.SKIP,
 			)
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				RESIZE EVENT
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			this.resize()
 			addEventListener('resize', this.resize)
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				AUTH EVENT
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			await new Promise(solve => {
+				app.auth().onAuthStateChanged(user => {
+					user
+					? (this.hide(), solve())
+					: this.show()
+				})
+			})
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				RETURN
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			return this
 		}
+		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+			SHOW
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		show = async () => {
-			const _ = this.el
-			const logo = this.$.logo
+			if (this.config.mode === this.MODE.SHOW) return
+			else this.config.mode = this.MODE.SHOW
 
+			const _ = this.el
+			const logo = $.logo
+
+			logo.show(logo.MODE.LOGIN, {en:'Sign In',id:'Masuk Akun'})
+			
 			_.login.enable
-			logo.show(logo.MODE.LOGIN, 'Login')
+			this.resize()
 		}
+		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+			HIDE
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		hide = async () => {
+			if (this.config.mode === this.MODE.HIDE) return
+			else this.config.mode = this.MODE.HIDE
+
 			const _ = this.el
+
 			_.login.disable
+			this.resize()
 		}
-		resize = async e => {
+		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+			RESIZE
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+		resize = async () => {
 			const _ = this.el
+
 			switch(this.config.mode) {
 				case this.MODE.SHOW:
 					_.login.css = {
 						scale:1,
+						opacity:1,
 						left:`${innerWidth/2}px`,
 						top:`${innerHeight/2}px`,
 					}
 					break
 				case this.MODE.HIDE:
+					_.login.css = {
+						scale:.8,
+						opacity:0,
+					}
 					break
 			}
 		}

@@ -6,7 +6,7 @@
  * @description main app
  * @async
  */
-(async $ => { 'use strict'
+(async () => { 'use strict'
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		UTILITIES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -23,34 +23,37 @@
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		MAIN CONFIG
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	$.config = await(await load('app/config.js')).init($)
+	const config = $.config = await(await load('app/config.js')).init()
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		INITIAL PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	// initial head
-	await(await load('page/head.js')).init($)
+	await(await load('page/head.js')).init()
 	// initial css
-	await(await load('page/css.js')).init($)
-	// logo page
-	const logo = $.logo = await(await load('page/logo.js')).init($)
-	logo.show(logo.MODE.INTRO, 'Online Shop')
+	await(await load('page/css.js')).init()
+	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		LOGO PAGE
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	$.logo = await(await load('page/logo.js')).init()
+	$.logo.show($.logo.MODE.INTRO, {en:'Online Shop',id:'Toko Online'})
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		FIREBASE APPS
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	let timer = performance.now()
 	// firebase auth, firestore, & storage
-	const fire = $.fire = await(await load('app/fire.js')).init('auth')
-	if (performance.now() - timer < 1000) await wait(1000)
+	// $.fire = await(await load('app/fire.js')).init('auth')
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		PAGES
+		TESTING
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	// check login status
-	if (fire.auth.currentUser === null) {
-		// login page
-		const login = $.login = await(await load('page/login.js')).init($)
-		login.show()
-	}
-	else {
-		fire.auth
-	}
-})({})
+	// fire.app.auth().signOut()
+	config.login_as = $.LOGIN_AS.ADMIN
+	config.page = $.PAGE.STOCK
+	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		NAVIGATION BAR
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	$.navbar = await(await load('page/navbar.js')).init()
+	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		LOGIN PAGE
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	// $.login = await(await load('page/login.js')).init()
+
+})()

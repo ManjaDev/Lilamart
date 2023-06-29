@@ -8,7 +8,7 @@
  */
 (async () => { 'use strict'
 	return new class {
-		init = async $ => {
+		init = async () => {
 			document.querySelector('html').setAttribute('lang', $.config.app.lang)
 			document.title = $.config.app.title
 			document.head.newChild('meta',{charset:$.config.app.charset})

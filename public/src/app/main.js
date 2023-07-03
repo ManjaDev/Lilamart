@@ -35,7 +35,7 @@
 		LOGO PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	$.logo = await(await load('page/logo.js')).init()
-	$.logo.show($.logo.MODE.INTRO, {en:'Online Shop',id:'Toko Online'})
+	await $.logo.show($.logo.MODE.INTRO, {en:'Online Shop',id:'Toko Online'})
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		FIREBASE APPS
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -51,8 +51,7 @@
 		NAVIGATION BAR
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	$.navbar = await(await load('page/navbar.js')).init()
-	$.navbar.show()
-	$.navbar.el.chat.click()
+	await $.navbar.show()
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		LOGIN PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/

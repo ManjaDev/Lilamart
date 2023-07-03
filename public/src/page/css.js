@@ -8,8 +8,15 @@
  */
 (async () => { 'use strict'
 	return new class {
+		constructor() {
+			this.el = {
+				root:document.querySelector(':root'),
+				body:document.body,
+			}
+		}
 		init = async () => {
-			document.body.css = {
+			const _ = this.el
+			_.body.css = {
 				'--col_white':$.config.color.white,
 				'--col_black':$.config.color.black,
 				'--col_gold':$.config.color.gold,
@@ -21,12 +28,13 @@
 				'--col_neutral':$.config.color.neutral,
 				'--col_dark':$.config.color.dark,
 				'--col_darker':$.config.color.darker,
-				margin:0,
-				padding:0,
-				background: 'var(--col_neutral)',
 				textAlign: 'center',
 				userSelect:'none',
+				margin:0,
+				padding:0,
+				background: 'var(--col_black)',
 			}
+			return this
 		}
 	}
 })()

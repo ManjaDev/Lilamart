@@ -8,13 +8,15 @@
  */
 (async () => { 'use strict'
 	return new class {
-		init = async () => {
-			$.PAGE = {
+		constructor() {
+			const PAGE = {
 				CART:Symbol(),
-				SHOP:Symbol(),
 				CHAT:Symbol(),
+				LOGO:Symbol(),
+				SHOP:Symbol(),
 				LOGIN:Symbol(),
 				STOCK:Symbol(),
+				NAVBAR:Symbol(),
 				REPORT:Symbol(),
 				ACCOUNT:Symbol(),
 				SETTING:Symbol(),
@@ -22,7 +24,7 @@
 				TRANSACTION:Symbol(),
 				NOTIFICATION:Symbol(),
 			}
-			$.LOGIN = {
+			const LOGIN = {
 				SKIP:Symbol(),
 				APPLE:Symbol(),
 				YAHOO:Symbol(),
@@ -34,14 +36,31 @@
 				FACEBOOK:Symbol(),
 				MICROSOFT:Symbol(),
 			}
-			$.LOGIN_AS = {
+			const LOGIN_AS = {
 				ADMIN:Symbol(),
 				CLIENT:Symbol(),
 				ANONYM:Symbol(),
 			}
+			const USER_AGENT = {
+				DESKTOP:Symbol(),
+				MOBILE:Symbol(),
+			}
+			Object.defineProperties($,{
+			  WIDTH:{get:()=>720},
+			  SCALE:{get:()=>(innerWidth/720)},
+			  PAGE:{value:PAGE},
+			  LOGIN:{value:LOGIN},
+			  LOGIN_AS:{value:LOGIN_AS},
+			  USER_AGENT:{value:USER_AGENT},
+			})
+		}
+		init = async () => {
 			return {
 				page:$.PAGE.LOGIN,
-				login_as:$.LOGIN_AS.GUEST,
+				login_as:$.LOGIN_AS.ANONYM,
+				user_agent:(navigator.userAgent.search('Mobile') === -1
+					? $.USER_AGENT.DESKTOP
+					: $.USER_AGENT.MOBILE),
 				app:{
 					title:'Lilamart',
 					description:'Lila Online Shop',
@@ -51,11 +70,9 @@
 					charset:'utf-8',
 					viewport:{
 						width:'device-width',
-						height:'device-height',
-						'user-scalable':'no',
-						'initial-scale':1,
-						'minimum-scale':1,
-						'maximum-scale':1,
+						'user-scalable':'yes',
+						'initial-scale':'1',
+				    'minimum-scale':'1',
 					},
 				},
 				color:{

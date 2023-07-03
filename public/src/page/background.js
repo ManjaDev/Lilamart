@@ -2,8 +2,8 @@
  * @author Miftachul Huda <miftachul.huda.makruf@gmail.com>
  * @copyright MANJA 2023
  * 
- * @name stock
- * @description stock page
+ * @name background
+ * @description background page
  * @async @class
  */
 (async () => { 'use strict'
@@ -19,22 +19,39 @@
 		init = async () => {
 			const _ = this.el
 			const config = this.config
+			let canvas, ctx, img, detail, grid = [], scale, x, y
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				CONFIG
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 			config.page = $.config.page
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				STOCK
+				BACKGROUND
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			_.stock = document.body.newChild('div')
-			_.stock.css = {
+			_.background = document.body.newChild('canvas')
+			_.background.css = {
 				position:'absolute',
+				left:0,
+				top:0,
 				width:'100%',
 				height:'100%',
-				background:'var(--col_black)',
 				zIndex:-1,
 			}
 
+			img = new Image()
+			img.src = 'res/background/peeblespair.jpg'
+			const draw = () => {
+				canvas = _.background
+				canvas.width = canvas.clientWidth
+				canvas.height = canvas.clientHeight
+				scale = canvas.height/img.height
+				x = (canvas.width/2)-(img.width*scale/2)
+				y = 0
+				ctx = canvas.getContext('2d')
+				ctx.drawImage(img,x,y,img.width*scale,img.height*scale)
+				console.log(img.width,img.height)
+			}
+			img.addEventListener('load',draw)
+			addEventListener('resize',draw)
 			addEventListener('resize',this.resize)
 
 			await this.hide()
@@ -46,7 +63,7 @@
 
 			const _ = this.el
 
-			_.stock.enable
+			_.background.enable
 			await this.resize()
 			await $.wait(500)
 		}
@@ -58,7 +75,7 @@
 
 			await this.resize()
 			await $.wait(200)
-			_.stock.disable
+			_.background.disable
 		}
 		resize = async () => {
 			const _ = this.el

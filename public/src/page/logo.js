@@ -45,6 +45,7 @@
 				overflow:'visible',
 				width:0, height:0,
 				position:'absolute',
+				left:`${innerWidth/2}px`,
 				scale:.7,
 				opacity:0,
 			}
@@ -93,11 +94,25 @@
 			_.subtitle.css = {
 				position:'absolute',
 				fontFamily:'Kaushan Script',
-				fontSize:'50px',
+				fontSize:'60px',
 				fontWeight:'bold',
 				whiteSpace:'nowrap',
 				color:'var(--col_neutral)',
 				textShadow:`0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15)`
+			}
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				BACKGROUND
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			_.bg = _.logo.newChild('div')
+			_.bg.css = {
+				position:'absolute',
+				top:'calc(var(--size) / -2)',
+				left:'calc((var(--size)*1.5)/-2)',
+				width:'calc(var(--size)*1.5)',
+				height:'var(--size)',
+				background:'var(--col_neutral)',
+				borderRadius:'calc(var(--size) / 2)',
+				zIndex:'-1',
 			}
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				STAR SVG
@@ -170,6 +185,7 @@
 			const wait = $.wait
 			const MODE = this.MODE
 			const config = this.config
+			const body = $.css.el.body
 
 			if (config.mode === MODE.HIDE) _.logo.enable
 
@@ -177,7 +193,7 @@
 			config.lang = $.config.app.lang
 
 			_.logo.css = {
-				transition:'scale .5s, opacity .5s, left 0s, top .5s',
+				transition:'scale .5s, opacity .5s, top .5s',
 				opacity:1,
 			}
 			this.resize()
@@ -227,7 +243,7 @@
 			const wait = $.wait
 
 			_.logo.css = {
-				transition:'scale .2s, opacity .2s, left 0s, top 0s',
+				transition:'scale .2s, opacity .2s, top 0s',
 				scale:parseFloat(_.logo.style.scale)-.1,
 				opacity:0,
 			}
@@ -241,27 +257,42 @@
 			const _ = this.el
 			const MODE = this.MODE
 			const config = this.config
-
+			const body = $.css.el.body
+			
 			switch(config.mode) {
 				case MODE.INTRO:
+					_.bg.css = {
+						'--size':`${innerHeight}px`,
+						scale:2/.8,
+					}
 					_.logo.css = {
 						scale:.8,
-						left:`${innerWidth/2}px`,
 						top:`${innerHeight/2}px`,
 					}
 					break
 				case MODE.LOGIN:
+					_.bg.css = {
+						'--size':`${innerHeight}px`,
+						scale:2/.7,
+					}
 					_.logo.css = {
 						scale:.7,
-						left:`${innerWidth/2}px`,
 						top:`${innerHeight/2-400}px`,
 					}
 					break
 				case MODE.TITLE:
+					_.bg.css = {
+						scale:1/.6,
+						transition:'width .3s, height .5s',
+						'--size':`${_.title.clientHeight+100}px`,
+						top:'calc(var(--size)*-1)',
+						left:'calc((var(--size)*1.3)/-2)',
+						width:'calc(var(--size)*1.3)',
+						boxShadow:'0 0 7px var(--col_dark)',
+					}
 					_.logo.css = {
-						scale:.4,
-						left:`${innerWidth/2}px`,
-						top:`${_.title.clientHeight/2}px`,
+						scale:.5,
+						top:`${_.title.clientHeight/3}px`,
 					}
 					break
 			}

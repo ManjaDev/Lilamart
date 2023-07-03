@@ -8,8 +8,6 @@
  */
 (async () => { 'use strict'
 	return new class {
-		// client : chat, cart, shop, notification, setting
-		// admin : dashboard, report, transaction, stock, chat, notification, setting
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			CONSTRUCTOR
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -33,15 +31,17 @@
 					[$.PAGE.TRANSACTION]:'transaction',
 					[$.PAGE.NOTIFICATION]:'notification',
 				},
-				LANG:{
-					EN:0b1,
-					ID:0b10,
-				},
 				TITLE:{
-					TEXT:0b100,
-				},
-				BUTTON:{
-					CLICK:0b1000,
+					[$.PAGE.CART]:{EN:'Cart',ID:'Keranjang'},
+					[$.PAGE.SHOP]:{EN:'Shop',ID:'Belanja'},
+					[$.PAGE.CHAT]:{EN:'Chat',ID:'Pesan'},
+					[$.PAGE.STOCK]:{EN:'Stock',ID:'Stok'},
+					[$.PAGE.REPORT]:{EN:'Report',ID:'Laporan'},
+					[$.PAGE.ACCOUNT]:{EN:'Account',ID:'Akun'},
+					[$.PAGE.SETTING]:{EN:'Setting',ID:'Pengaturan'},
+					[$.PAGE.DASHBOARD]:{EN:'Dashboard',ID:'Dasbor'},
+					[$.PAGE.TRANSACTION]:{EN:'Transaction',ID:'Transaksi'},
+					[$.PAGE.NOTIFICATION]:{EN:'Notification',ID:'Notifikasi'},
 				},
 			}
 		}
@@ -50,132 +50,15 @@
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 		init = async () => {
 			const _ = this.el
-			const MODE = this.MODE
+			const PAGE = $.PAGE
 			const ID = this.GET.ID
-			const LANG = this.GET.LANG
+			const MODE = this.MODE
 			const TITLE = this.GET.TITLE
-			const BUTTON = this.GET.BUTTON
 			const config = this.config
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				CONFIG
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			config.mode = MODE.HIDE
-			config.lang = $.config.app.lang.toUpperCase()
-			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-				NAVBAR METHOD
-			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			const _id = {
-				[$.PAGE.CART]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-
-							}
-						: null
-					)
-				},
-				[$.PAGE.SHOP]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.CHAT]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.STOCK]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.REPORT]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.ACCOUNT]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.SETTING]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.DASHBOARD]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.TRANSACTION]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-				[$.PAGE.NOTIFICATION]: get => {
-					return (
-						  get === (TITLE.TEXT | LANG.EN) ? 'GOOGLE'
-						: get === (TITLE.TEXT | LANG.ID) ? 'GOOGLE'
-						: get === BUTTON.CLICK 
-						? async () => {
-							
-							}
-						: null
-					)
-				},
-			}
+			config.page = $.config.page
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				NAVBAR
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -187,13 +70,12 @@
 				position:'fixed',
 				width:'100%',
 				height:'var(--navbar_size)',
-				background:'var(--col_black)',
-			}
-			_.navbar.css = {
+				backgroundColor:'#FFF3',
+				backdropFilter:'blur(7px)',
+				borderTop:'1px solid var(--col_lighter)',
 				left:0,
-				top:`${innerHeight-_.navbar.clientHeight}px`,
-			}
-			
+				top:`${innerHeight+50}px`,
+			}			
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				BUTTON
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -207,51 +89,55 @@
 						position:'absolute',
 						width:'calc(var(--icon_size) - (var(--icon_padding) * 2))',
 						height:'calc(var(--icon_size) - (var(--icon_padding) * 2))',
-						fill:'var(--col_light)',
+						fill:'var(--col_neutral)',
 						// background:'var(--col_lighter)',
 						// borderRadius:'calc(var(--icon_size) / 3)',
 						top:'calc((var(--navbar_size) - var(--icon_size)) / 2)',
 					}
-					_[id].css = {
-						left:`${(innerWidth/2/ids.length)+innerWidth*(i/ids.length)-(_[id].clientWidth/2)}px`,
-					}
+					// _[id].css = {
+					// 	left:`${(innerWidth/2/ids.length)+innerWidth*(i/ids.length)-(_[id].clientWidth/2)}px`,
+					// }
 					_[id].innerHTML = await load(`icon/${id}.svg`)
-					// _[id].addEventListener('click',_id[ids[i]](BUTTON.CLICK))
-					click = async e => {
-						
-					}
-					_[id].addEventListener('click',click)
+					_[id].addEventListener('click',async () => await _id(ids[i]))
 				}
 			}
-			  $.config.login_as === $.LOGIN_AS.ADMIN
-			? await button(
-				$.PAGE.CHAT,
-				$.PAGE.STOCK,
-				$.PAGE.TRANSACTION,
-				$.PAGE.DASHBOARD,
-				$.PAGE.ACCOUNT,
-				$.PAGE.NOTIFICATION,
-				$.PAGE.SETTING,
+			await button(
+				PAGE.CHAT,
+				PAGE.NOTIFICATION,
+				PAGE.SHOP,
+				PAGE.CART,
+				PAGE.STOCK,
+				PAGE.DASHBOARD,
+				PAGE.TRANSACTION,
+				PAGE.ACCOUNT,
+				PAGE.SETTING,
 			)
-			: $.config.login_as === $.LOGIN_AS.ANONYM
-			| $.config.login_as === $.LOGIN_AS.CLIENT
-			? await button(
-				$.PAGE.CART,
-				$.PAGE.SHOP,
-				$.PAGE.CHAT,
-				$.PAGE.ACCOUNT,
-				$.PAGE.STOCK,
-				$.PAGE.REPORT,
-				$.PAGE.SETTING,
-				$.PAGE.DASHBOARD,
-				$.PAGE.TRANSACTION,
-				$.PAGE.NOTIFICATION,
-			)
-			: null
+			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+				CLICK EVENT
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+			const _id = async id => {
+				$.logo.show($.logo.MODE.TITLE,{
+					en:TITLE[id].EN,
+					id:TITLE[id].ID,
+				})
+				try {
+					await $[ID[config.page]].hide()
+				} catch(e) {}
+
+				$.config.page = config.page = id
+
+				try {
+					$[ID[config.page]].show()
+				} catch(e) {
+					$[ID[config.page]]
+					= await(await load(`page/${ID[id]}.js`)).init()
+					$[ID[config.page]].show()
+				}
+			}
+			await this.hide()
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				RESIZE EVENT
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-			this.resize()
 			addEventListener('resize', this.resize)
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				RETURN
@@ -266,13 +152,37 @@
 			else this.config.mode = this.MODE.SHOW
 
 			const _ = this.el
-			const page = $.config.page
+			const ID = this.GET.ID
+			const config = this.config
+			const PAGE = $.PAGE
 			const login_as = $.config.login_as
+			const LOGIN_AS = $.LOGIN_AS
+			const enable = (...ids) => ids.forEach(id => _[ID[id]].enable)
 
-			switch(login_as) {
+			login_as === LOGIN_AS.ADMIN
+			? enable(
+				PAGE.CHAT,
+				PAGE.NOTIFICATION,
+				PAGE.STOCK,
+				PAGE.DASHBOARD,
+				PAGE.TRANSACTION,
+				PAGE.ACCOUNT,
+				PAGE.SETTING,
+			)
+			: login_as === LOGIN_AS.ANONYM
+			| login_as === LOGIN_AS.CLIENT
+			? enable(
+				PAGE.CHAT,
+				PAGE.NOTIFICATION,
+				PAGE.SHOP,
+				PAGE.CART,
+				PAGE.SETTING,
+			)
+			: null
 
-			}
 			_.navbar.enable
+			await this.resize()
+			await $.wait(500)
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 			HIDE
@@ -282,7 +192,23 @@
 			else this.config.mode = this.MODE.HIDE
 
 			const _ = this.el
+			const ID = this.GET.ID
+			const PAGE = $.PAGE
+			const disable = (...ids) => ids.forEach(id => _[ID[id]].disable)
 
+			disable(
+				PAGE.CHAT,
+				PAGE.NOTIFICATION,
+				PAGE.STOCK,
+				PAGE.DASHBOARD,
+				PAGE.TRANSACTION,
+				PAGE.ACCOUNT,
+				PAGE.SHOP,
+				PAGE.CART,
+				PAGE.SETTING,
+			)
+			await this.resize()
+			await $.wait(200)
 			_.navbar.disable
 		}
 		/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -295,8 +221,21 @@
 
 			switch(config.mode) {
 				case MODE.SHOW:
+					_.navbar.css = {
+						transition:'top .5s',
+						top:`${innerHeight-_.navbar.clientHeight}px`,
+					}
+					for (let i=0,icon=_.navbar.children; i<icon.length; i++) {
+						icon[i].css = {
+							left:`${(innerWidth/2/icon.length)+innerWidth*(i/icon.length)-(icon[i].clientWidth/2)}px`,
+						}
+					}
 					break
 				case MODE.HIDE:
+					_.navbar.css = {
+						transition:'top .2s',
+						top:`${innerHeight+50}px`,
+					}		
 					break
 			}
 		}

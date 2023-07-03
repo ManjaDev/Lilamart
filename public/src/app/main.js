@@ -11,7 +11,7 @@
 		UTILITIES
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	// pause the execution 
-	const wait = $.wait = duration => new Promise(s => setTimeout(s,duration))
+	$.wait = duration => new Promise(s => setTimeout(s,duration))
 	// console overrides
 	await load('util/console.js')
 	// math utilities
@@ -23,14 +23,14 @@
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		MAIN CONFIG
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
-	const config = $.config = await(await load('app/config.js')).init()
+	$.config = await(await load('app/config.js')).init()
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		INITIAL PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	// initial head
-	await(await load('page/head.js')).init()
+	$.head = await(await load('page/head.js')).init()
 	// initial css
-	await(await load('page/css.js')).init()
+	$.css = await(await load('page/css.js')).init()
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		LOGO PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -45,15 +45,22 @@
 		TESTING
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	// fire.app.auth().signOut()
-	config.login_as = $.LOGIN_AS.ADMIN
-	config.page = $.PAGE.STOCK
+	$.config.login_as = $.LOGIN_AS.ADMIN
+	$.config.page = $.PAGE.STOCK
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		NAVIGATION BAR
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	$.navbar = await(await load('page/navbar.js')).init()
+	$.navbar.show()
+	$.navbar.el.chat.click()
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		LOGIN PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	// $.login = await(await load('page/login.js')).init()
+	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		BACKGROUND
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
+	$.background = await(await load('page/background.js')).init()
+	$.background.show()
 
 })()

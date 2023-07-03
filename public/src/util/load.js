@@ -24,13 +24,22 @@
 	}
 	const load_list = []
 	const load = (link, options) => {
-		// check if link already loaded
-		if (load_list.some(e => e === link)) return
-		load_list.push(link)
-		// parse extension
-		let ext = link.split('.')
+		let ext, path
+		ext = link.split('.')
 		ext = ext[ext.length-1].toLowerCase()
-		let path = ext == DOT.JS ? 'src' : ext == DOT.CSS ? 'style' : 'res'
+		path = ext == DOT.JS ? 'src' : ext == DOT.CSS ? 'style' : 'res'
+		// check if link already loaded
+		switch(ext) {
+			case DOT.WOFF:
+			case DOT.WOFF2:
+			case DOT.TTF:
+			case DOT.OTF:
+				if (load_list.some(e => e === link) ) return
+				break
+			default:
+				load_list.push(link)
+				break
+		}
 		
 		return new Promise((solve,reject) => {
 			let get = (link,key) => {

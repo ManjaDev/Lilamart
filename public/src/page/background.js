@@ -19,6 +19,7 @@
 		init = async () => {
 			const _ = this.el
 			const config = this.config
+			const color = [250,170,10]
 			let canvas, ctx, img, particles, particle_number, mappedImage, pixels,
 			    scale, scale_w, scale_h, x, y, w, h, animation
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -69,12 +70,27 @@
 				}
 			}
 			function start_particles() {
-				if (animation) cancelAnimationFrame(animation)
+				mappedImage = []
+				for (let y = 0; y < canvas.height; y++) {
+					let row = []
+					for (let x = 0; x < canvas.width; x++) {
+						const red = pixels.data[(y * 4 * pixels.width) + (x * 4)]
+						const green = pixels.data[(y * 4 * pixels.width) + (x * 4 + 1)]
+						const blue = pixels.data[(y * 4 * pixels.width) + (x * 4 + 2)]
+						const brightness = calculateRelativeBrightness(red,green,blue)
+						const cell = [
+							brightness,
+						]
+						row.push(cell)
+					}
+					mappedImage.push(row)
+				}
 				particles = []
 				particle_number = 5000
 				for (let i = 0; i < particle_number; i++) {
 					particles.push(new Particle)
 				}
+				if (animation) cancelAnimationFrame(animation)
 				animate()
 			}
 			function animate() {
@@ -96,6 +112,23 @@
 					(blue * blue) * 0.114
 				) / 100
 			}
+			function mono_color(pixels,rgb) {
+				for (let y = 0; y < pixels.height; y++) {
+					for ( let x = 0; x < pixels.width; x++) {
+						const index = (y * 4 * pixels.width) + (x * 4)
+						const red = pixels.data[index]
+						const green = pixels.data[index + 1]
+						const blue = pixels.data[index + 2]
+						const average = (red + green + blue) / 3
+						const alpha = 1 * average / 2
+						pixels.data[index] = rgb[0]
+						pixels.data[index + 1] = rgb[1]
+						pixels.data[index + 2] = rgb[2]
+						pixels.data[index + 3] = alpha
+					}
+				}
+				ctx.putImageData(pixels,0,0)
+			}
 			const load = () => {
 				canvas.width = canvas.clientWidth
 				canvas.height = canvas.clientHeight
@@ -112,22 +145,7 @@
 				ctx.drawImage(img,x,y,w,h)
 				pixels = ctx.getImageData(0,0,canvas.width,canvas.height)
 				ctx.clearRect(0,0,canvas.width,canvas.height)
-				mappedImage = []
-				for (let y = 0; y < canvas.height; y++) {
-					let row = []
-					for (let x = 0; x < canvas.width; x++) {
-						const red = pixels.data[(y * 4 * pixels.width) + (x * 4)]
-						const green = pixels.data[(y * 4 * pixels.width) + (x * 4 + 1)]
-						const blue = pixels.data[(y * 4 * pixels.width) + (x * 4 + 2)]
-						const brightness = calculateRelativeBrightness(red,green,blue)
-						const cell = [
-							brightness,
-						]
-						row.push(cell)
-					}
-					mappedImage.push(row)
-				}
-				start_particles()
+				mono_color(pixels,color)
 			}
 			img.src = 'res/image/peeblespair.jpg'
 			img.addEventListener('load',load)

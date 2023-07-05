@@ -13,7 +13,7 @@
 	// pause the execution 
 	$.wait = duration => new Promise(s => setTimeout(s,duration))
 	// console overrides
-	await load('util/console.js')
+	// await load('util/console.js')
 	// math utilities
 	await load('util/math.js')
 	// shorthand for createElement & set StyleSheets
@@ -35,7 +35,7 @@
 		LOGO PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	$.logo = await(await load('page/logo.js')).init()
-	await $.logo.show($.logo.MODE.INTRO, {en:'Online Shop',id:'Toko Online'})
+	$.logo.show($.logo.MODE.INTRO, {en:'Online Shop',id:'Toko Online'})
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		FIREBASE APPS
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -51,7 +51,8 @@
 		NAVIGATION BAR
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
 	$.navbar = await(await load('page/navbar.js')).init()
-	await $.navbar.show()
+	$.navbar.show()
+	$.navbar.el.chat.click()
 	/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		LOGIN PAGE
 	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/

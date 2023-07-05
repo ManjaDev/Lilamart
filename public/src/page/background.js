@@ -19,7 +19,8 @@
 		init = async () => {
 			const _ = this.el
 			const config = this.config
-			let canvas, ctx, img, detail, grid = [], scale, x, y
+			let canvas, ctx, img, particles, particle_number, mappedImage, pixels,
+			    scale, scale_w, scale_h, x, y, w, h, animation
 			/*━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 				CONFIG
 			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━*/
@@ -36,22 +37,102 @@
 				height:'100%',
 				zIndex:-1,
 			}
-
+			canvas = _.background
+			ctx = canvas.getContext('2d')
 			img = new Image()
-			img.src = 'res/background/peeblespair.jpg'
-			const draw = () => {
-				canvas = _.background
+
+			class Particle {
+				constructor() {
+					this.x = Math.random() * canvas.width
+					this.y = 0
+					this.speed = 0
+					this.velocity = Math.random() * 3.5
+					this.size = Math.random() * 1.5 + 1
+				}
+				update() {
+					this.position1 = Math.floor(this.y)
+					this.position2 = Math.floor(this.x)
+					this.speed = mappedImage[this.position1][this.position2]
+					let movement = (2.5 - this.speed) + this.velocity
+
+					this.y += movement
+					if (this.y >= canvas.height) {
+						this.x = Math.random() * canvas.width
+						this.y = 0
+					}
+				}
+				draw() {
+					ctx.beginPath()
+					ctx.fillStyle = '#FDCD6D'
+					ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+					ctx.fill()
+				}
+			}
+			function start_particles() {
+				if (animation) cancelAnimationFrame(animation)
+				particles = []
+				particle_number = 5000
+				for (let i = 0; i < particle_number; i++) {
+					particles.push(new Particle)
+				}
+				animate()
+			}
+			function animate() {
+				ctx.globalAlpha = .05
+				ctx.fillStyle = '#000'
+				ctx.fillRect(0,0,canvas.width,canvas.height)
+				ctx.globalAlpha = .02
+				for (let i = 0; i < particles.length; i++) {
+					particles[i].update()
+					ctx.globalAlpha = particles[i].speed * .5
+					particles[i].draw()
+				}
+				animation = requestAnimationFrame(animate)
+			}
+			function calculateRelativeBrightness(red,green,blue) {
+				return Math.sqrt(
+					(red * red) * 0.299 +
+					(green * green) * 0.587 +
+					(blue * blue) * 0.114
+				) / 100
+			}
+			const load = () => {
 				canvas.width = canvas.clientWidth
 				canvas.height = canvas.clientHeight
-				scale = canvas.height/img.height
-				x = (canvas.width/2)-(img.width*scale/2)
-				y = 0
-				ctx = canvas.getContext('2d')
-				ctx.drawImage(img,x,y,img.width*scale,img.height*scale)
-				console.log(img.width,img.height)
+
+				scale_w = canvas.width/img.width
+				scale_h = canvas.height/img.height
+				scale = scale_w < scale_h ? scale_w : scale_h
+
+				x = canvas.width / 2 - img.width * scale / 2
+				y = canvas.height / 2 - img.height * scale / 2
+				w = img.width * scale
+				h = img.height * scale
+
+				ctx.drawImage(img,x,y,w,h)
+				pixels = ctx.getImageData(0,0,canvas.width,canvas.height)
+				ctx.clearRect(0,0,canvas.width,canvas.height)
+				mappedImage = []
+				for (let y = 0; y < canvas.height; y++) {
+					let row = []
+					for (let x = 0; x < canvas.width; x++) {
+						const red = pixels.data[(y * 4 * pixels.width) + (x * 4)]
+						const green = pixels.data[(y * 4 * pixels.width) + (x * 4 + 1)]
+						const blue = pixels.data[(y * 4 * pixels.width) + (x * 4 + 2)]
+						const brightness = calculateRelativeBrightness(red,green,blue)
+						const cell = [
+							brightness,
+						]
+						row.push(cell)
+					}
+					mappedImage.push(row)
+				}
+				start_particles()
 			}
-			img.addEventListener('load',draw)
-			addEventListener('resize',draw)
+			img.src = 'res/image/peeblespair.jpg'
+			img.addEventListener('load',load)
+			addEventListener('resize',load)
+
 			addEventListener('resize',this.resize)
 
 			await this.hide()
